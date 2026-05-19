@@ -1,0 +1,19 @@
+{
+  "name": "gitanjali-web",
+  "version": "1.0.0",
+  "description": "Gitanjali Supermart Full Stack App",
+  "scripts": {
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install",
+    "build": "cd client && npm install && npm run build",
+    "start": "cd server && npm install && npm start",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "uuid": "^14.0.0"
+  }
+}
