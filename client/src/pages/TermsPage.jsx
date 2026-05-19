@@ -47,6 +47,8 @@ const TermsPage = () => (
         <BulletList items={[
           'Orders are confirmed only after successful payment or confirmation.',
           'We reserve the right to cancel any order due to stock issues, pricing errors, or other operational reasons.',
+          'A delivery charge of ₹40 is applicable on all home delivery orders. This charge covers third-party delivery partner costs and is non-refundable once the order is dispatched.',
+          'No delivery charge is applied for store pickup orders.',
         ]} />
       </Section>
 
