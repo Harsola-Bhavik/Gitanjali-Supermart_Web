@@ -54,10 +54,10 @@ const globalLimiter = rateLimit({
 app.use(globalLimiter);
 
 // Body Parsers
-// express.text() catches Zaakpay callbacks sent as Content-Type: text/plain
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-app.use(express.text({ type: '*/*', limit: '10mb' }));
+// express.text() only for Zaakpay callback — scoped to avoid consuming multipart/form-data streams
+app.use('/api/orders/payment/callback', express.text({ type: '*/*', limit: '10mb' }));
 
 // Prevent HTTP Parameter Pollution
 // NOTE: hpp is applied AFTER body parsers but EXCLUDED for the Zaakpay

@@ -1,5 +1,6 @@
 const supabase = require('../config/supabase');
 const { uploadImage, deleteImage } = require('../utils/supabaseStorage');
+const logger = require('../config/logger');
 
 exports.getProducts = async (req, res) => {
   let { category, search, page = 1, limit = 12 } = req.query;
@@ -56,8 +57,15 @@ exports.getProduct = async (req, res) => {
 
 // Admin handlers
 exports.createProduct = async (req, res) => {
-  const productData = req.body;
-  
+  const productData = { ...req.body };
+
+  // Remove empty string values so optional fields are stored as NULL
+  Object.keys(productData).forEach((key) => {
+    if (productData[key] === '' || productData[key] === undefined) {
+      delete productData[key];
+    }
+  });
+
   if (req.file) {
     productData.image_url = await uploadImage(req.file);
   }
@@ -68,14 +76,24 @@ exports.createProduct = async (req, res) => {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    logger.error('[createProduct] Supabase error: %j | payload: %j', error, productData);
+    throw error;
+  }
 
   res.status(201).json({ success: true, data, message: 'Product created successfully' });
 };
 
 exports.updateProduct = async (req, res) => {
   const { id } = req.params;
-  const productData = req.body;
+  const productData = { ...req.body };
+
+  // Remove empty string values so optional fields are stored as NULL
+  Object.keys(productData).forEach((key) => {
+    if (productData[key] === '' || productData[key] === undefined) {
+      delete productData[key];
+    }
+  });
 
   if (req.file) {
     // get old product to delete old image
