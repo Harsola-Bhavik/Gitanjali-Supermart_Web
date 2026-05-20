@@ -15,6 +15,12 @@ const schema = z.object({
   stock_quantity: z.coerce.number().int().min(0, 'Stock must be 0 or more'),
   category: z.string().min(1, 'Category is required'),
   is_active: z.boolean().optional(),
+  ingredients: z.string().optional(),
+  manufacture_date: z.string().optional(),
+  expiry_date: z.string().optional(),
+  shelf_life: z.string().optional(),
+  storage_instructions: z.string().optional(),
+  net_weight: z.string().optional(),
 });
 
 export default function ProductFormPage() {
@@ -40,7 +46,21 @@ export default function ProductFormPage() {
     api.get(`/api/products/${id}`)
       .then((res) => {
         const p = res.data.data;
-        reset({ name: p.name, description: p.description || '', price: p.price, unit: p.unit || '', stock_quantity: p.stock_quantity, category: p.category, is_active: p.is_active });
+        reset({
+          name: p.name,
+          description: p.description || '',
+          price: p.price,
+          unit: p.unit || '',
+          stock_quantity: p.stock_quantity,
+          category: p.category,
+          is_active: p.is_active,
+          ingredients: p.ingredients || '',
+          manufacture_date: p.manufacture_date || '',
+          expiry_date: p.expiry_date || '',
+          shelf_life: p.shelf_life || '',
+          storage_instructions: p.storage_instructions || '',
+          net_weight: p.net_weight || '',
+        });
         if (p.image_url) setPreviewUrl(p.image_url);
       })
       .catch(() => toast.error('Failed to load product'))
@@ -109,6 +129,35 @@ export default function ProductFormPage() {
           <div className="sm:col-span-2">
             <label className="block text-sm font-medium mb-1">Description</label>
             <textarea {...register('description')} rows={3} className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+          </div>
+
+          {/* Product Detail Fields */}
+          <div className="sm:col-span-2">
+            <p className="text-sm font-semibold text-gray-700 border-t pt-4 mb-3">Product Details <span className="text-gray-400 font-normal">(shown on product detail page)</span></p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Net Weight / Volume</label>
+            <input {...register('net_weight')} placeholder="e.g. 500g, 1 litre" className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Shelf Life</label>
+            <input {...register('shelf_life')} placeholder="e.g. 6 months, 1 year" className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Manufacture Date</label>
+            <input {...register('manufacture_date')} placeholder="e.g. Jan 2025 or leave blank for fresh items" className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Expiry / Best Before</label>
+            <input {...register('expiry_date')} placeholder="e.g. Dec 2025 or 3 days from delivery" className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-medium mb-1">Ingredients</label>
+            <textarea {...register('ingredients')} rows={2} placeholder="e.g. Wheat flour, Sugar, Salt..." className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-medium mb-1">Storage Instructions</label>
+            <input {...register('storage_instructions')} placeholder="e.g. Store in a cool, dry place" className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500" />
           </div>
           <div className="sm:col-span-2">
             <label className="block text-sm font-medium mb-1">Product Image</label>

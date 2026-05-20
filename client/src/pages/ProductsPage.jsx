@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ShoppingCart, Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import useCartStore from '../store/useCartStore';
 import { useDebounce } from '../hooks/useDebounce';
@@ -14,6 +15,7 @@ export default function ProductsPage() {
   const [category, setCategory] = useState('');
   const [page, setPage] = useState(1);
   const debouncedSearch = useDebounce(search, 400);
+  const navigate = useNavigate();
   const addItem = useCartStore((s) => s.addItem);
 
   useEffect(() => {
@@ -75,7 +77,7 @@ export default function ProductsPage() {
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {products.map((product) => (
-            <div key={product.id} className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-shadow">
+            <div key={product.id} onClick={() => navigate(`/products/${product.id}`)} className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-shadow cursor-pointer">
               <div className="h-40 bg-gray-100 overflow-hidden flex items-center justify-center">
                 {product.image_url ? (
                   <img src={product.image_url} alt={product.name} className="w-full h-full object-contain" />
@@ -99,7 +101,7 @@ export default function ProductsPage() {
                   </div>
                   <button
                     disabled={product.stock_quantity === 0}
-                    onClick={() => { addItem(product); toast.success('Added to cart'); }}
+                    onClick={(e) => { e.stopPropagation(); addItem(product); toast.success('Added to cart'); }}
                     className="flex items-center gap-1 bg-primary-600 text-white text-xs px-2 py-1.5 rounded-lg hover:bg-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     <ShoppingCart className="w-3 h-3" />

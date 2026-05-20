@@ -6,6 +6,7 @@ import AdminLayout from './components/AdminLayout';
 import NotFound from './pages/NotFound';
 
 import ProductsPage from './pages/ProductsPage';
+import ProductDetailPage from './pages/ProductDetailPage';
 import CheckoutPage from './pages/CheckoutPage';
 import PaymentCallbackPage from './pages/PaymentCallbackPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
@@ -30,6 +31,7 @@ function App() {
         {/* Customer Storefront */}
         <Route path="/" element={<StorefrontLayout />}>
           <Route index element={<ProductsPage />} />
+          <Route path="products/:id" element={<ProductDetailPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
           <Route path="payment/callback" element={<PaymentCallbackPage />} />
           <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
