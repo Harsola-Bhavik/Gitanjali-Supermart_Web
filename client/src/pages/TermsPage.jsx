@@ -65,6 +65,7 @@ const TermsPage = () => (
           'Delivery Timeline: Our standard target delivery window is 45 to 60 minutes from the time of order confirmation. However, this timeline is an estimate and may vary based on traffic, weather conditions, distance, and peak aggregator demand.',
           'Delivery Charges: A standard delivery fee of ₹40 applies to all home delivery orders. This fee goes directly toward covering the operational costs of our third-party delivery partners and is strictly non-refundable once the order has been dispatched from our facility.',
           'Store Pickup: No delivery or handling charges apply to orders placed under the "Store Pickup" option. Customers choosing this option are responsible for collecting their orders within the specified store hours.',
+          'Live Tracking: Once your order is picked up by our delivery partner, a real-time GPS tracking link may be shared with you via WhatsApp, SMS, or Email directly by the aggregator app or delivery partner. Geetanjali Farm Fresh is not responsible for the availability or accuracy of third-party tracking links.',
         ]} />
       </Section>
 
