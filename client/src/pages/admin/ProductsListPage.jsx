@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search } from 'lucide-react';
 import api from '../../api/axios';
 import toast from 'react-hot-toast';
 
@@ -9,34 +9,92 @@ export default function ProductsListPage() {
   const [meta, setMeta] = useState({ totalPages: 1 });
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [category, setCategory] = useState('');
+  const [categories, setCategories] = useState([]);
 
-  const fetchProducts = (p = 1) => {
+  useEffect(() => {
+    api.get('/api/categories').then((res) => setCategories(res.data.data)).catch(() => {});
+  }, []);
+
+  const fetchProducts = (p = 1, s = search, c = category) => {
     setLoading(true);
-    api.get('/api/products', { params: { page: p, limit: 10 } })
+    const params = { page: p, limit: 20 };
+    if (s) params.search = s;
+    if (c) params.category = c;
+    api.get('/api/products', { params })
       .then((res) => { setProducts(res.data.data); setMeta(res.data.meta); })
       .catch(() => {})
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { fetchProducts(page); }, [page]);
+  useEffect(() => { fetchProducts(page, search, category); }, [page]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setPage(1);
+    fetchProducts(1, search, category);
+  };
+
+  const handleCategoryChange = (val) => {
+    setCategory(val);
+    setPage(1);
+    fetchProducts(1, search, val);
+  };
 
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this product?')) return;
     try {
       await api.delete(`/api/admin/products/${id}`);
       toast.success('Product deleted');
-      fetchProducts(page);
+      fetchProducts(page, search, category);
     } catch {}
   };
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Products</h1>
+        <h1 className="text-2xl font-bold">Products <span className="text-sm font-normal text-gray-400">({meta.total || 0} total)</span></h1>
         <Link to="/admin/products/new" className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-500 transition-colors">
           <Plus className="w-4 h-4" /> Add Product
         </Link>
       </div>
+
+      {/* Search + Filter */}
+      <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3 mb-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+          />
+        </div>
+        <select
+          value={category}
+          onChange={(e) => handleCategoryChange(e.target.value)}
+          className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+        >
+          <option value="">All Categories</option>
+          {categories.map((c) => (
+            <option key={c.id} value={c.name}>{c.name}</option>
+          ))}
+        </select>
+        <button type="submit" className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-500 text-sm transition-colors">
+          Search
+        </button>
+        {(search || category) && (
+          <button
+            type="button"
+            onClick={() => { setSearch(''); setCategory(''); setPage(1); fetchProducts(1, '', ''); }}
+            className="border border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-50 text-sm transition-colors"
+          >
+            Clear
+          </button>
+        )}
+      </form>
 
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         <table className="w-full text-sm">
