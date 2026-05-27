@@ -5,7 +5,7 @@ const orderItemSchema = z.object({
   name: z.string(),
   quantity: z.number().int().positive(),
   price: z.number().positive(),
-  image_url: z.string().optional(),
+  image_url: z.string().nullable().optional(),
 });
 
 const createOrderSchema = z.object({

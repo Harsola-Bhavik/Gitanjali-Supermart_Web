@@ -1,9 +1,12 @@
 [
-  "Fruits & Vegetables",
-  "Dairy",
-  "Bakery",
+  "Vegetables",
+  "Fruits",
+  "Dairy & Eggs",
+  "Ice Cream & Frozen",
   "Beverages",
-  "Snacks",
-  "Household",
-  "Personal Care"
+  "Snacks & Namkeen",
+  "Bakery",
+  "Staples & Cooking",
+  "Personal Care",
+  "Household & Cleaning"
 ]
